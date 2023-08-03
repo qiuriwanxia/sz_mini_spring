@@ -12,6 +12,7 @@
         <module>sz_spring_beans</module>
         <module>sz_spring_test</module>
         <module>sz_spring_context</module>
+        <module>sz_spring_core</module>
     </modules>
 
 
