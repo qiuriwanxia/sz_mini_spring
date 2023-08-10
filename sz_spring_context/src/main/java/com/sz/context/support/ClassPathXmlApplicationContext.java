@@ -1,35 +1,23 @@
 package com.sz.context.support;
 
+import com.sz.context.ApplicationContext;
+import com.sz.context.ApplicationEvent;
 import com.sz.core.io.ClassPathXmlResource;
 import com.sz.core.io.Resource;
-import com.sz.spring.factory.config.BeanDefinition;
-import com.sz.spring.factory.support.AbstractBeanDefinition;
-import com.sz.spring.factory.support.BeanFactory;
-import com.sz.spring.factory.support.DefaultListableBeanFactory;
-import com.sz.spring.factory.support.GenericBeanDefinition;
-import com.sz.spring.factory.xml.XmlBeanDefinitionReader;
-import org.dom4j.Attribute;
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.Element;
-import org.dom4j.io.SAXReader;
+import com.sz.spring.beans.config.BeanDefinition;
+import com.sz.spring.beans.support.BeanFactory;
+import com.sz.spring.beans.support.DefaultListableBeanFactory;
+import com.sz.spring.beans.xml.XmlBeanDefinitionReader;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 解析XML 获取Bean的配置信息
  * 注意此时不实例化bean
  */
-public class ClassPathXmlApplicationContext {
+public class ClassPathXmlApplicationContext implements ApplicationContext {
 
 
     private static final String CLASSPATH = "classpath:";
@@ -86,6 +74,42 @@ public class ClassPathXmlApplicationContext {
 
     public void registerBeanDefinition(BeanDefinition beanDefinition) {
         this.beanFactory.registerBeanDefinition(beanDefinition);
+    }
+
+
+    /**
+     * 新增能力  判断是否存在某个单例bean 来自父类
+     *
+     * @param name
+     * @return
+     */
+    public boolean containsBean(String name) {
+        return this.beanFactory.containsBean(name);
+    }
+
+    /**
+     * 新增能力 注册单例bean 来自父类
+     *
+     * @param beanName
+     * @param bean
+     */
+    public void registerBean(String beanName, Object bean) {
+        this.beanFactory.registerBean(beanName, bean);
+    }
+
+    public void publishEvent(ApplicationEvent event) {
+    }
+
+    public boolean isSingleton(String name) {
+        return false;
+    }
+
+    public boolean isPrototype(String name) {
+        return false;
+    }
+
+    public Class<?> getType(String name) {
+        return null;
     }
 
 }

@@ -1,11 +1,10 @@
-package com.sz.spring.factory.xml;
+package com.sz.spring.beans.xml;
 
-import com.sz.core.io.ClassPathXmlResource;
 import com.sz.core.io.Resource;
-import com.sz.spring.factory.config.BeanDefinition;
-import com.sz.spring.factory.support.AbstractBeanDefinition;
-import com.sz.spring.factory.support.BeanFactory;
-import com.sz.spring.factory.support.GenericBeanDefinition;
+import com.sz.spring.beans.config.BeanDefinition;
+import com.sz.spring.beans.support.AbstractBeanDefinition;
+import com.sz.spring.beans.support.BeanFactory;
+import com.sz.spring.beans.support.GenericBeanDefinition;
 import org.dom4j.Attribute;
 import org.dom4j.Element;
 

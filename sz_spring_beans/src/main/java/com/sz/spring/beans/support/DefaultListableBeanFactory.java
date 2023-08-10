@@ -1,14 +1,14 @@
-package com.sz.spring.factory.support;
+package com.sz.spring.beans.support;
 
-import com.sz.spring.factory.config.BeanDefinition;
-import com.sz.spring.factory.exception.BeansException;
+import com.sz.spring.beans.config.BeanDefinition;
+import com.sz.spring.beans.exception.BeansException;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class DefaultListableBeanFactory implements BeanFactory{
+public class DefaultListableBeanFactory extends DefaultSingletonBeanRegistry implements BeanFactory{
 
     /**
      * 存放beanDefinition的map集合
@@ -21,14 +21,10 @@ public class DefaultListableBeanFactory implements BeanFactory{
      */
     private List<String> beanNames = new ArrayList();
 
-    /**
-     * 存放单例对象bean
-     */
-    private final Map<String, Object> singletonObjects = new ConcurrentHashMap<>(256);
 
     @Override
     public Object getBean(String beanName) throws BeansException {
-        Object bean = this.singletonObjects.get(beanName);
+        Object bean = this.getSingleton(beanName);
         if (bean==null){
             synchronized (DefaultListableBeanFactory.class){
                 if (bean==null){
@@ -43,7 +39,7 @@ public class DefaultListableBeanFactory implements BeanFactory{
 
                     try {
                         bean = beanDefinitionClass.newInstance();
-                        this.singletonObjects.put(beanName,bean);
+                        super.registerSingleton(beanName,bean);
                         return bean;
                     } catch (InstantiationException e) {
                         throw new RuntimeException(e);
@@ -63,5 +59,30 @@ public class DefaultListableBeanFactory implements BeanFactory{
     public void registerBeanDefinition(BeanDefinition beanDefinition) {
         this.beanDefinitionMap.put(beanDefinition.getId(),beanDefinition);
         this.beanNames.add(beanDefinition.getId());
+    }
+
+    @Override
+    public boolean containsBean(String name) {
+        return super.containsSingleton(name);
+    }
+
+    @Override
+    public void registerBean(String beanName, Object obj) {
+        super.registerSingleton(beanName,obj);
+    }
+
+    @Override
+    public boolean isSingleton(String name) {
+        return false;
+    }
+
+    @Override
+    public boolean isPrototype(String name) {
+        return false;
+    }
+
+    @Override
+    public Class<?> getType(String name) {
+        return null;
     }
 }

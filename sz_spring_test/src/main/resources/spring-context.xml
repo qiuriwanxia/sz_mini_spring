@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <beans>
 
-    <bean id = "zhangsan" class = "com.sz.test.bean.People"></bean>
+    <bean id = "zhangsan" class = "com.sz.test.bean.People">
+        <property type="String" name="name" value="zhangsan"/>
+        <property type="String" name="age" value="19"/>
+    </bean>
 
 </beans>

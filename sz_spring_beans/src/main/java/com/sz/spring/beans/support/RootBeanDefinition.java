@@ -1,4 +1,4 @@
-package com.sz.spring.factory.support;
+package com.sz.spring.beans.support;
 
 public class RootBeanDefinition extends AbstractBeanDefinition {
 

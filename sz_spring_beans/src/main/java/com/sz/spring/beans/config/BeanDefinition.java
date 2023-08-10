@@ -1,6 +1,9 @@
-package com.sz.spring.factory.config;
+package com.sz.spring.beans.config;
 
 public interface BeanDefinition {
+
+    String SCOPE_SINGLETON = "singleton";
+    String SCOPE_PROTOTYPE = "prototype";
 
     String getId();
 
