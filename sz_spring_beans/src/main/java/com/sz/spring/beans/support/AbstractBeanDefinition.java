@@ -37,6 +37,15 @@ public abstract class AbstractBeanDefinition implements BeanDefinition {
     //保证线程安全
     volatile Class beanClass;
 
+    String[] dependsOn;
+
+    public String[] getDependsOn() {
+        return dependsOn;
+    }
+
+    public void setDependsOn(String[] dependsOn) {
+        this.dependsOn = dependsOn;
+    }
 
     public boolean isLazyinit() {
         return lazyinit;

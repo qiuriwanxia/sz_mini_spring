@@ -33,12 +33,16 @@ public class ClassPathXmlApplicationContext implements ApplicationContext {
         this.beanFactory = beanFactory;
     }
 
+    public ClassPathXmlApplicationContext(String fileName) {
+        this(fileName, true);
+    }
+
     /**
      * 通过路径解析xml配置文件
      *
      * @param fileName
      */
-    public ClassPathXmlApplicationContext(String fileName) {
+    public ClassPathXmlApplicationContext(String fileName, boolean isRefesh) {
         try {
             // 1.读取配置文件 获取资源
             Resource resource = new ClassPathXmlResource(findXml(fileName));
@@ -48,6 +52,10 @@ public class ClassPathXmlApplicationContext implements ApplicationContext {
 
             //3.注册beanDefinition
             xmlBeanDefinitionReader.loadBeanDefinitions(resource);
+
+            if (isRefesh){
+                this.refresh();
+            }
 
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
@@ -110,6 +118,13 @@ public class ClassPathXmlApplicationContext implements ApplicationContext {
 
     public Class<?> getType(String name) {
         return null;
+    }
+
+    @Override
+    public void refresh() {
+
+        this.beanFactory.refresh();
+
     }
 
 }

@@ -9,6 +9,22 @@ public class PropertieValues {
 
     private Set<String> processedProperties = new LinkedHashSet<>();
 
+    public List<PropertyValue> getPropertyValues() {
+        return propertyValues;
+    }
+
+    public void setPropertyValues(List<PropertyValue> propertyValues) {
+        this.propertyValues = propertyValues;
+    }
+
+    public Set<String> getProcessedProperties() {
+        return processedProperties;
+    }
+
+    public void setProcessedProperties(Set<String> processedProperties) {
+        this.processedProperties = processedProperties;
+    }
+
     /**
      *  添加一个配置元信息类
      */

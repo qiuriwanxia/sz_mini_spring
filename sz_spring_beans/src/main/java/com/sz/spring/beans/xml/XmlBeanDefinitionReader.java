@@ -2,6 +2,10 @@ package com.sz.spring.beans.xml;
 
 import com.sz.core.io.Resource;
 import com.sz.spring.beans.config.BeanDefinition;
+import com.sz.spring.beans.factory.ConstructorArgumentValues;
+import com.sz.spring.beans.factory.PropertieValues;
+import com.sz.spring.beans.factory.PropertyValue;
+import com.sz.spring.beans.factory.ValueHolder;
 import com.sz.spring.beans.support.AbstractBeanDefinition;
 import com.sz.spring.beans.support.BeanFactory;
 import com.sz.spring.beans.support.GenericBeanDefinition;
@@ -9,6 +13,8 @@ import org.dom4j.Attribute;
 import org.dom4j.Element;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 public class XmlBeanDefinitionReader {
 
@@ -19,22 +25,72 @@ public class XmlBeanDefinitionReader {
         this.beanFactory = beanFactory;
     }
 
-    public void loadBeanDefinitions(Resource resource){
-        while (resource.hasNext()){
+    public void loadBeanDefinitions(Resource resource) {
+        while (resource.hasNext()) {
             Element element = (Element) resource.next();
             Attribute idAttribute = element.attribute("id");
             Attribute classAttribute = element.attribute("class");
-            if (idAttribute==null||classAttribute==null){
-                throw new RuntimeException((idAttribute==null?"class":"class")+"不能为空");
+            if (idAttribute == null || classAttribute == null) {
+                throw new RuntimeException((idAttribute == null ? "class" : "class") + "不能为空");
             }
-            BeanDefinition beanDefinition = buildBeanDefinition(idAttribute, classAttribute);
+            AbstractBeanDefinition beanDefinition = (AbstractBeanDefinition) buildBeanDefinition(idAttribute, classAttribute);
+
+            //处理构造方法参数
+            ConstructorArgumentValues constructorArgumentValues = new ConstructorArgumentValues();
+            List<Element> constructor = element.elements("constructor");
+            for (int i = 0; i < constructor.size(); i++) {
+                Element ele = constructor.get(i);
+                Attribute type = ele.attribute("type");
+                Attribute name = ele.attribute("name");
+                Attribute value = ele.attribute("value");
+                ValueHolder valueHolder = new ValueHolder(value.getValue(), type.getValue(), name.getValue());
+                constructorArgumentValues.addArgumentValue(i, valueHolder);
+            }
+
+            //处理字段参数
+            PropertieValues propertieValues = new PropertieValues();
+            List<Element> property = element.elements("property");
+            ArrayList<String> depends = new ArrayList<>();
+            for (Element ele : property) {
+                boolean rfFlag = false;
+                PropertyValue propertyValue;
+                Attribute type = ele.attribute("type");
+                Attribute name = ele.attribute("name");
+                Attribute value = ele.attribute("value");
+                Attribute ref = ele.attribute("ref");
+                if (ref != null && !"".equals(ref.getValue())) {
+                    String refValue = ref.getValue();
+                    value = ref;
+                    depends.add(refValue);
+                    rfFlag = true;
+                }
+
+                String valueValue = value.getValue();
+                String typeValue;
+                if (type == null) {
+                    typeValue = "";
+                } else {
+                    typeValue = type.getValue();
+                } ;
+                String nameValue = name.getValue();
+                propertyValue = new PropertyValue(valueValue, typeValue, nameValue);
+                if (rfFlag) {
+                    propertyValue.setRef(true);
+                }
+                propertieValues.addPropertieValue(propertyValue);
+            }
+
+            beanDefinition.setDependsOn(depends.toArray(new String[0]));
+            beanDefinition.setPropertieValues(propertieValues);
+            beanDefinition.setConstructorArgumentValues(constructorArgumentValues);
+
             beanFactory.registerBeanDefinition(beanDefinition);
         }
     }
 
     private BeanDefinition buildBeanDefinition(Attribute... attribute) {
 
-        if (attribute==null){
+        if (attribute == null) {
             return null;
         }
 
@@ -45,13 +101,13 @@ public class XmlBeanDefinitionReader {
         for (Attribute attr : attribute) {
             String fieldName = attr.getName();
             try {
-                if ("class".equals(fieldName)){
-                    fieldName="beanClassName";
+                if ("class".equals(fieldName)) {
+                    fieldName = "beanClassName";
                 }
                 Field field = beanDefinitionClass.getDeclaredField(fieldName);
                 field.setAccessible(true);
                 try {
-                    field.set(beanDefinition,attr.getValue());
+                    field.set(beanDefinition, attr.getValue());
                 } catch (IllegalAccessException e) {
                     throw new RuntimeException(e);
                 }

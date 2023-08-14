@@ -25,7 +25,7 @@ public class ClassPathXmlResource implements Resource {
             throw new RuntimeException(e);
         }
         rootElement = document.getRootElement();
-        elementIterator = rootElement.elementIterator("bean");
+        elementIterator = rootElement.elementIterator();
     }
 
     @Override

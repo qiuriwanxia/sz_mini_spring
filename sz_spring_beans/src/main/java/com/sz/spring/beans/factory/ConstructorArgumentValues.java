@@ -10,7 +10,7 @@ public class ConstructorArgumentValues {
     private final List<ValueHolder> genericArgumentValues = new LinkedList<>();
     public ConstructorArgumentValues() {
     }
-    private void addArgumentValue(Integer key, ValueHolder newValue) {
+    public void addArgumentValue(Integer key, ValueHolder newValue) {
         this.indexedArgumentValues.put(key, newValue);
     }
     public boolean hasIndexedArgumentValue(int index) {
@@ -22,7 +22,7 @@ public class ConstructorArgumentValues {
     public void addGenericArgumentValue(Object value, String type) {
         this.genericArgumentValues.add(new ValueHolder(value, type));
     }
-    private void addGenericArgumentValue(ValueHolder newValue) {
+    public void addGenericArgumentValue(ValueHolder newValue) {
         if (newValue.getName() != null) {
             for (Iterator<ValueHolder> it =
                  this.genericArgumentValues.iterator(); it.hasNext(); ) {
@@ -44,7 +44,7 @@ public class ConstructorArgumentValues {
         return null;
     }
     public int getArgumentCount() {
-        return this.genericArgumentValues.size();
+        return this.indexedArgumentValues.size();
     }
     public boolean isEmpty() {
         return this.genericArgumentValues.isEmpty();

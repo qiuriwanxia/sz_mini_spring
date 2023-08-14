@@ -17,6 +17,11 @@ public class DefaultSingletonBeanRegistry implements SingletonBeanRegister {
     private Map<String,Object> singletonObjects = new ConcurrentHashMap<>();
 
     /**
+     * 二级缓存  解决循环依赖问题
+     */
+    private Map<String,Object> earlySingletonObjects = new ConcurrentHashMap<>();
+
+    /**
      * 存储注册过的单例bean 并且按顺序存储
      */
     private Set<String> registeredSingletons = new LinkedHashSet<>();
@@ -27,6 +32,7 @@ public class DefaultSingletonBeanRegistry implements SingletonBeanRegister {
             synchronized (this.singletonObjects){
                 if (!registeredSingletons.contains(beanName)){
                     this.addSingleton(beanName,singletonObject);
+                    this.earlySingletonObjects.remove(beanName);
                 }
             }
         }
@@ -34,9 +40,17 @@ public class DefaultSingletonBeanRegistry implements SingletonBeanRegister {
 
     @Override
     public Object getSingleton(String beanName) {
-        return singletonObjects.get(beanName);
-
+        Object bean = singletonObjects.get(beanName);
+        if (bean==null){
+           bean = this.earlySingletonObjects.get(beanName);
+        }
+        return bean;
     }
+
+    public void addEarlySingleton(String beanName,Object obj){
+        this.earlySingletonObjects.put(beanName,obj);
+    }
+
 
     @Override
     public boolean containsSingleton(String beanName) {

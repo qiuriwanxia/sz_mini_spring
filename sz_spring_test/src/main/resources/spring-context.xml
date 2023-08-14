@@ -1,9 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <beans>
 
-    <bean id = "zhangsan" class = "com.sz.test.bean.People">
-        <property type="String" name="name" value="zhangsan"/>
+    <bean id = "lisi" class = "com.sz.test.bean.People">
+        <constructor type ="String" name = "nationnality" value="China"/>
+        <property type="String" name="name" value="lisi"/>
         <property type="String" name="age" value="19"/>
+        <property name="family" ref="zhangsan"/>
+    </bean>
+
+    <bean id = "zhangsan" class = "com.sz.test.bean.People">
+        <constructor type ="String" name = "nationnality" value="China"/>
+        <property type="String" name="name" value="zhangsan"/>
+        <property type="String" name="age" value="43"/>
+        <property name="family" ref="lisi"/>
     </bean>
 
 </beans>

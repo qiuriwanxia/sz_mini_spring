@@ -1,6 +1,7 @@
 package com.sz.test;
 
 import com.sz.context.support.ClassPathXmlApplicationContext;
+import com.sz.test.bean.People;
 
 import java.util.ArrayList;
 
@@ -15,7 +16,7 @@ public class App {
     public static void main(String[] args) {
 
         ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring-context.xml");
-        Object people = applicationContext.getBean("zhangsan");
+        People people = (People) applicationContext.getBean("zhangsan");
         System.out.println("zhangsan = " + people);
 
     }
