@@ -1,14 +1,14 @@
-package com.sz.spring.beans.xml;
+package com.sz.spring.beans.factory.xml;
 
 import com.sz.core.io.Resource;
-import com.sz.spring.beans.config.BeanDefinition;
-import com.sz.spring.beans.factory.ConstructorArgumentValues;
-import com.sz.spring.beans.factory.PropertieValues;
-import com.sz.spring.beans.factory.PropertyValue;
-import com.sz.spring.beans.factory.ValueHolder;
-import com.sz.spring.beans.support.AbstractBeanDefinition;
-import com.sz.spring.beans.support.BeanFactory;
-import com.sz.spring.beans.support.GenericBeanDefinition;
+import com.sz.spring.beans.factory.config.BeanDefinition;
+import com.sz.spring.beans.factory.support.ConstructorArgumentValues;
+import com.sz.spring.beans.factory.support.PropertieValues;
+import com.sz.spring.beans.factory.support.PropertyValue;
+import com.sz.spring.beans.factory.support.ValueHolder;
+import com.sz.spring.beans.factory.support.AbstractBeanDefinition;
+import com.sz.spring.beans.factory.BeanFactory;
+import com.sz.spring.beans.factory.support.GenericBeanDefinition;
 import org.dom4j.Attribute;
 import org.dom4j.Element;
 

@@ -1,8 +1,6 @@
-package com.sz.spring.beans.support;
+package com.sz.spring.beans.factory.support;
 
-import com.sz.spring.beans.config.BeanDefinition;
-import com.sz.spring.beans.factory.ConstructorArgumentValues;
-import com.sz.spring.beans.factory.PropertieValues;
+import com.sz.spring.beans.factory.config.BeanDefinition;
 
 public abstract class AbstractBeanDefinition implements BeanDefinition {
 
@@ -33,8 +31,10 @@ public abstract class AbstractBeanDefinition implements BeanDefinition {
     private String initMethodName;
 
 
-
-    //保证线程安全
+    /**
+     *
+     保证线程安全
+     */
     volatile Class beanClass;
 
     String[] dependsOn;

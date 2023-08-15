@@ -1,13 +1,10 @@
-package com.sz.spring.beans.support;
+package com.sz.spring.beans.factory.support;
 
-import com.sz.spring.beans.config.BeanDefinition;
-import com.sz.spring.beans.exception.BeansException;
-import com.sz.spring.beans.factory.ConstructorArgumentValues;
-import com.sz.spring.beans.factory.PropertyValue;
-import com.sz.spring.beans.factory.ValueHolder;
+import com.sz.spring.beans.factory.BeanFactory;
+import com.sz.spring.beans.factory.config.BeanDefinition;
+import com.sz.spring.beans.factory.exception.BeansException;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -15,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class DefaultListableBeanFactory extends DefaultSingletonBeanRegistry implements BeanFactory {
+public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry implements BeanFactory {
 
     /**
      * 存放beanDefinition的map集合
@@ -29,18 +26,9 @@ public class DefaultListableBeanFactory extends DefaultSingletonBeanRegistry imp
     private List<String> beanNames = new ArrayList();
 
 
-    public void refresh() {
-        for (String beanName : beanNames) {
-            try {
-                getBean(beanName);
-            }catch (Exception e){
-                throw e;
-            }
-        }
-    }
-
     @Override
     public Object getBean(String beanName) throws BeansException {
+
         Object bean = this.getSingleton(beanName);
         if (bean == null) {
             synchronized (DefaultListableBeanFactory.class) {
@@ -59,9 +47,23 @@ public class DefaultListableBeanFactory extends DefaultSingletonBeanRegistry imp
                         addEarlySingleton(beanName,bean);
 
                         //处理属性
-                         handleProper(beanName, bean, beanDefinition);
+                        handleProper(beanName, bean, beanDefinition);
 
-                         return bean;
+                        //执行初始化前方法回调
+                        applyBeanPostProcessorBeforeInitialization(bean,beanName);
+
+                        //执行初始化方法
+                        String initMethodName = beanDefinition.getInitMethodName();
+
+                        if (initMethodName !=null&&!initMethodName.equals("")){
+                            //反射回调初始化方法
+                            invokeInitMethod(bean,initMethodName);
+                        }
+
+                        //执行初始化后方法回调
+                        applyBeanPostProcessorAfterInitialization(bean,beanName);
+
+                        return bean;
                     } catch (InstantiationException e) {
                         throw new RuntimeException(e);
                     } catch (IllegalAccessException e) {
@@ -74,6 +76,60 @@ public class DefaultListableBeanFactory extends DefaultSingletonBeanRegistry imp
         }
 
         return bean;
+    }
+
+    public void applyBeanPostProcessorAfterInitialization(Object bean, String beanName) {
+    }
+
+    public void invokeInitMethod(Object bean, String initMethodName) {
+
+    }
+
+    public void applyBeanPostProcessorBeforeInitialization(Object bean, String beanName) {
+
+    }
+
+
+    @Override
+    public void registerBeanDefinition(BeanDefinition beanDefinition) {
+        this.beanDefinitionMap.put(beanDefinition.getId(), beanDefinition);
+        this.beanNames.add(beanDefinition.getId());
+    }
+
+    @Override
+    public boolean containsBean(String name) {
+        return false;
+    }
+
+    @Override
+    public void registerBean(String beanName, Object obj) {
+
+    }
+
+    @Override
+    public boolean isSingleton(String name) {
+        return false;
+    }
+
+    @Override
+    public boolean isPrototype(String name) {
+        return false;
+    }
+
+    @Override
+    public Class<?> getType(String name) {
+        return null;
+    }
+
+    @Override
+    public void refresh() {
+        for (String beanName : beanNames) {
+            try {
+                getBean(beanName);
+            }catch (Exception e){
+                throw e;
+            }
+        }
     }
 
     private Object handleProper(String beanName, Object bean, AbstractBeanDefinition beanDefinition) throws IllegalAccessException {
@@ -197,35 +253,4 @@ public class DefaultListableBeanFactory extends DefaultSingletonBeanRegistry imp
         return bean;
     }
 
-
-    @Override
-    public void registerBeanDefinition(BeanDefinition beanDefinition) {
-        this.beanDefinitionMap.put(beanDefinition.getId(), beanDefinition);
-        this.beanNames.add(beanDefinition.getId());
-    }
-
-    @Override
-    public boolean containsBean(String name) {
-        return super.containsSingleton(name);
-    }
-
-    @Override
-    public void registerBean(String beanName, Object obj) {
-        super.registerSingleton(beanName, obj);
-    }
-
-    @Override
-    public boolean isSingleton(String name) {
-        return false;
-    }
-
-    @Override
-    public boolean isPrototype(String name) {
-        return false;
-    }
-
-    @Override
-    public Class<?> getType(String name) {
-        return null;
-    }
 }

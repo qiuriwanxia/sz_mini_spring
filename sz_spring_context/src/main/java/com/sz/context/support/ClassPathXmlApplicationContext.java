@@ -4,10 +4,12 @@ import com.sz.context.ApplicationContext;
 import com.sz.context.ApplicationEvent;
 import com.sz.core.io.ClassPathXmlResource;
 import com.sz.core.io.Resource;
-import com.sz.spring.beans.config.BeanDefinition;
-import com.sz.spring.beans.support.BeanFactory;
-import com.sz.spring.beans.support.DefaultListableBeanFactory;
-import com.sz.spring.beans.xml.XmlBeanDefinitionReader;
+import com.sz.spring.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor;
+import com.sz.spring.beans.factory.config.BeanDefinition;
+import com.sz.spring.beans.factory.BeanFactory;
+import com.sz.spring.beans.factory.support.AutowireCapableBeanFactory;
+import com.sz.spring.beans.factory.support.DefaultListableBeanFactory;
+import com.sz.spring.beans.factory.xml.XmlBeanDefinitionReader;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -23,7 +25,7 @@ public class ClassPathXmlApplicationContext implements ApplicationContext {
     private static final String CLASSPATH = "classpath:";
 
 
-    private BeanFactory beanFactory = new DefaultListableBeanFactory();
+    private BeanFactory beanFactory = new AutowireCapableBeanFactory();
 
     public BeanFactory getBeanFactory() {
         return beanFactory;
@@ -122,9 +124,14 @@ public class ClassPathXmlApplicationContext implements ApplicationContext {
 
     @Override
     public void refresh() {
-
+        this.registerBeanPostProcessors((AutowireCapableBeanFactory) this.beanFactory);
         this.beanFactory.refresh();
 
+    }
+
+    public void registerBeanPostProcessors(AutowireCapableBeanFactory beanFactory){
+        AutowiredAnnotationBeanPostProcessor beanPostProcessor = new AutowiredAnnotationBeanPostProcessor();
+        beanFactory.addBeanPostProcessor(beanPostProcessor);
     }
 
 }

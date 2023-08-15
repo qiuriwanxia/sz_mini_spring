@@ -15,4 +15,12 @@
         <property name="family" ref="lisi"/>
     </bean>
 
+    <bean id="school" class="com.sz.test.bean.School">
+        <property type="String" name="name" value="希望小学"/>
+    </bean>
+
+    <bean id="classRoom" class="com.sz.test.bean.ClassRoom">
+        <property type="String" name="name" value="三年级一班"/>
+    </bean>
+
 </beans>

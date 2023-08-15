@@ -1,7 +1,7 @@
-package com.sz.spring.beans.support;
+package com.sz.spring.beans.factory;
 
-import com.sz.spring.beans.config.BeanDefinition;
-import com.sz.spring.beans.exception.BeansException;
+import com.sz.spring.beans.factory.config.BeanDefinition;
+import com.sz.spring.beans.factory.exception.BeansException;
 
 public interface BeanFactory {
 

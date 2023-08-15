@@ -1,6 +1,5 @@
-package com.sz.spring.beans.factory;
+package com.sz.spring.beans.factory.support;
 
-import javax.swing.*;
 import java.util.*;
 
 public class PropertieValues {

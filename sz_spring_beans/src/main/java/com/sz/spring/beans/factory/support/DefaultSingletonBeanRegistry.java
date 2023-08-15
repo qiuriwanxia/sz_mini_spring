@@ -1,6 +1,6 @@
-package com.sz.spring.beans.support;
+package com.sz.spring.beans.factory.support;
 
-import com.sz.spring.beans.config.SingletonBeanRegister;
+import com.sz.spring.beans.factory.config.SingletonBeanRegister;
 
 import java.util.LinkedHashSet;
 import java.util.Map;

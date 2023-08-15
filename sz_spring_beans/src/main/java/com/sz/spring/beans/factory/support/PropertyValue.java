@@ -1,4 +1,4 @@
-package com.sz.spring.beans.factory;
+package com.sz.spring.beans.factory.support;
 
 import com.sun.istack.internal.Nullable;
 

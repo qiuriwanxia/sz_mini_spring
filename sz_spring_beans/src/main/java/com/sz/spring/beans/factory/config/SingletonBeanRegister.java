@@ -1,4 +1,4 @@
-package com.sz.spring.beans.config;
+package com.sz.spring.beans.factory.config;
 
 public interface SingletonBeanRegister {
 
