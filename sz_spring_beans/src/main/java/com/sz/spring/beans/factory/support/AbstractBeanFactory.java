@@ -78,15 +78,16 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
         return bean;
     }
 
-    public void applyBeanPostProcessorAfterInitialization(Object bean, String beanName) {
+    public Object applyBeanPostProcessorAfterInitialization(Object bean, String beanName) {
+        return bean;
     }
 
     public void invokeInitMethod(Object bean, String initMethodName) {
 
     }
 
-    public void applyBeanPostProcessorBeforeInitialization(Object bean, String beanName) {
-
+    public Object applyBeanPostProcessorBeforeInitialization(Object bean, String beanName) {
+        return bean;
     }
 
 

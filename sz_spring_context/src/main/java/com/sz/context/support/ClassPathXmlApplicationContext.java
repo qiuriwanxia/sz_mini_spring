@@ -7,7 +7,6 @@ import com.sz.core.io.Resource;
 import com.sz.spring.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor;
 import com.sz.spring.beans.factory.config.BeanDefinition;
 import com.sz.spring.beans.factory.BeanFactory;
-import com.sz.spring.beans.factory.support.AutowireCapableBeanFactory;
 import com.sz.spring.beans.factory.support.DefaultListableBeanFactory;
 import com.sz.spring.beans.factory.xml.XmlBeanDefinitionReader;
 
@@ -25,7 +24,7 @@ public class ClassPathXmlApplicationContext implements ApplicationContext {
     private static final String CLASSPATH = "classpath:";
 
 
-    private BeanFactory beanFactory = new AutowireCapableBeanFactory();
+    private BeanFactory beanFactory = new DefaultListableBeanFactory();
 
     public BeanFactory getBeanFactory() {
         return beanFactory;
@@ -124,12 +123,12 @@ public class ClassPathXmlApplicationContext implements ApplicationContext {
 
     @Override
     public void refresh() {
-        this.registerBeanPostProcessors((AutowireCapableBeanFactory) this.beanFactory);
+        this.registerBeanPostProcessors((DefaultListableBeanFactory) this.beanFactory);
         this.beanFactory.refresh();
 
     }
 
-    public void registerBeanPostProcessors(AutowireCapableBeanFactory beanFactory){
+    public void registerBeanPostProcessors(DefaultListableBeanFactory beanFactory){
         AutowiredAnnotationBeanPostProcessor beanPostProcessor = new AutowiredAnnotationBeanPostProcessor();
         beanFactory.addBeanPostProcessor(beanPostProcessor);
     }

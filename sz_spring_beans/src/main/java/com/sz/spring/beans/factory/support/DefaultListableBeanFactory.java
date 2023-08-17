@@ -3,7 +3,7 @@ package com.sz.spring.beans.factory.support;
 import com.sz.spring.beans.factory.config.BeanDefinition;
 import com.sz.spring.beans.factory.exception.BeansException;
 
-public class DefaultListableBeanFactory extends AbstractBeanFactory  {
+public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFactory  {
 
 
 
